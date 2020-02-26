@@ -1,18 +1,32 @@
-package model.logic;
+ package model.logic;
 
+import java.io.FileReader; 
+
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
+
+import model.data_structures.AlgoritmosOrdenamiento;
 import model.data_structures.ArregloDinamico;
 import model.data_structures.IArregloDinamico;
+import model.data_structures.ILista;
+import model.data_structures.NodoCola;
+import model.data_structures.NodoPila;
 
 /**
  * Definicion del modelo del mundo
+ * @param <T>
  *
  */
-public class Modelo {
+public class Modelo<T> {
+	private NodoCola cola;
+	private NodoPila<T> pila;
+	private AlgoritmosOrdenamiento<Feature> ordenadorJSON;
+	private ILista lista;
 	/**
 	 * Atributos del modelo del mundo
 	 */
 	private IArregloDinamico datos;
-	
+	private FeatureCollection feature;
 	/**
 	 * Constructor del modelo del mundo con capacidad predefinida
 	 */
@@ -29,44 +43,45 @@ public class Modelo {
 	{
 		datos = new ArregloDinamico(capacidad);
 	}
-	
 	/**
-	 * Servicio de consulta de numero de elementos presentes en el modelo 
-	 * @return numero de elementos presentes en el modelo
 	 */
-	public int darTamano()
-	{
-		return datos.darTamano();
-	}
 
-	/**
-	 * Requerimiento de agregar dato
-	 * @param dato
-	 */
-	public void agregar(String dato)
-	{	
-		datos.agregar(dato);
+	public void cargarJson()
+	{
+		try{
+			JsonReader reader;
+			Gson gson = new Gson();
+			reader= new JsonReader(new FileReader("./data/comparendos_dei_2018_small.geojson"));
+			feature = gson.fromJson(reader, FeatureCollection.class);
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
-	/**
-	 * Requerimiento buscar dato
-	 * @param dato Dato a buscar
-	 * @return dato encontrado
-	 */
-	public String buscar(String dato)
+	public int totalComparendos()
 	{
-		return datos.buscar(dato);
+		ArregloDinamico<T> listaCom = new ArregloDinamico<>(21);
+		int totalComparendos=0;
+		for (int i = 0; i < 21; i++) {
+			Feature featurePos = feature.getFeature()[i];
+			listaCom.add((T) featurePos);
+			totalComparendos++;
+		}
+		return totalComparendos;
 	}
 	
-	/**
-	 * Requerimiento eliminar dato
-	 * @param dato Dato a eliminar
-	 * @return dato eliminado
-	 */
-	public String eliminar(String dato)
+	public String darInfoComparendoMayorObjectId()
 	{
-		return datos.eliminar(dato);
+		IArregloDinamico<T> listaM = new ArregloDinamico<>(21);
+		for(int i = 0;i < 241; i++)
+		{
+			Feature feature1 = feature.getFeature()[i];
+			listaM.add((T) feature1);
+		}
+		return null;
 	}
-
 
 }
