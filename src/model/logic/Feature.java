@@ -1,8 +1,10 @@
 package model.logic;
 
 public class Feature implements Comparable<Feature> {
-private Properties properties;
-private Geometry geometry;
+	private String type;
+	private Properties properties;
+	private Geometry geometry;
+	
 	public Feature (Properties pProperties, Geometry pGeometry)
 	{
 		properties = pProperties;
@@ -18,15 +20,21 @@ private Geometry geometry;
 	}
 	public int compareTo(Feature pFeature)
 	{
-	if(this.geometry.darCoordinates().length > pFeature.darGeometry().darCoordinates().length)
-	{
-		return 1;
+		if(this.geometry.darCoordinates().length > pFeature.darGeometry().darCoordinates().length)
+		{
+			return 1;
+		}
+		if(this.geometry.darCoordinates().length < pFeature.darGeometry().darCoordinates().length)
+		{
+			return -1;
+		}
+		return 0;
 	}
-	if(this.geometry.darCoordinates().length < pFeature.darGeometry().darCoordinates().length)
-	{
-		return -1;
+	public String getType() {
+		return type;
 	}
-	return 0;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }
